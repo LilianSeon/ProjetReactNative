@@ -11,6 +11,8 @@ import Search from "./screens/Search";
 import Login from "./screens/Login";
 import Inscription from "./screens/Inscription";
 import logo from './assets/logo.png'
+import { Provider } from 'react-redux'
+import Store from './stores/configureStore'
 
 
 const BottomNavigator = createBottomTabNavigator(
@@ -60,7 +62,9 @@ const AppContainer = createAppContainer(AppNavigator);
 class App extends Component{
     render() {
       return (
+        <Provider store={Store}>
             <AppContainer/>
+        </Provider>
       )
     }
 }

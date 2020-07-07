@@ -1,13 +1,16 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
 import FilmService from '../API/films.service';
+import { connect } from 'react-redux';
+
 
 class FilmDetail extends Component {
 
     constructor(props){
       super(props)
       this.state = {
-        film: []
+        film: [],
+        favoritesFilm: []
       }
     }
 
@@ -23,19 +26,32 @@ class FilmDetail extends Component {
     }
 
     async componentDidMount(){
-
-        
         let film = await this.find(this.props.navigation.state.params.idFilm);
         this.setState({
             film
         })
-        console.log(this.state.film.production_companies);
+    }
+
+    _toggleFavorite() {
+        const action = { type: "TOGGLE_FAVORITE", value: this.state.film }
+        this.props.dispatch(action)
+    }
+
+    _displayFavoriteImage(){
+        var sourceImage = require('../assets/ic_favorite_border.png')
+
+        if(this.props.favoritesFilm.findIndex(item => item.id === this.state.film.id) !== -1){
+            sourceImage = require('../assets/ic_favorite.png')
+        }
+
+        return (
+            <Image source={sourceImage}/>
+        )
     }
 
     render() {
 
         let { poster_path, original_title, genres, production_companies} = this.state.film
-        
 
         return(
             <View>
@@ -51,13 +67,16 @@ class FilmDetail extends Component {
                 }
                 </View>
                 <View style={styles.production}>
-                <View style={styles.production_container}>
-                {
-                    (typeof production_companies !== 'undefined' && production_companies.length > 0) ? production_companies.map((item, key) => (<Image key={key} style={styles.production_img} source={{uri: "https://image.tmdb.org/t/p/w500"+item.logo_path}}/>)) : <Text>Production inconnu</Text>
+                    <View style={styles.production_container}>
+                    {
+                        (typeof production_companies !== 'undefined' && production_companies.length > 0) ? production_companies.map((item, key) => (<Image key={key} style={styles.production_img} source={{uri: "https://image.tmdb.org/t/p/w500"+item.logo_path}}/>)) : <Text>Production inconnu</Text>
 
-                }
+                    }
+                    </View>
                 </View>
-                </View>
+                <TouchableOpacity style={styles.fav} onPress={() => this._toggleFavorite()}>
+                    {this._displayFavoriteImage()}
+                </TouchableOpacity>
             </View>
         )
     }
@@ -127,8 +146,17 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+    },
+    fav:{
+        marginTop: 40,
+        alignItems: 'center'
     }
 })
 
-export default FilmDetail;
+const mapStateToProps = (state) => {
+    return {
+        favoritesFilm: state.favoritesFilm
+    }
+}
+
+export default connect(mapStateToProps)(FilmDetail);

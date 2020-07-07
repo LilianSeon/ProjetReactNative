@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet, FlatList, ScrollView, Text  } from 'react-native'
 import FilmItem from './FilmItem'
 import FilmService from '../API/films.service';
-//import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 
 class Home extends Component {
 
@@ -29,17 +29,20 @@ class Home extends Component {
     }
 
     render() {
+        
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.title}>Tendence d'aujourd'hui</Text>
             <FlatList
                 horizontal={true}
                 style={styles.list}
+                extraData={this.props.favoritesFilm}
                 data={this.state.trend}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) => (
                 <FilmItem
                     film={item}
+                    isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
                     displayDetailForFilm={false}
                     navigation={this.props.navigation}
                 />
@@ -50,6 +53,7 @@ class Home extends Component {
             <FlatList
                 horizontal={true}
                 style={styles.list}
+                extraData={this.props.favoritesFilm}
                 data={this.state.discoverMovies}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) => (
@@ -65,6 +69,7 @@ class Home extends Component {
             <FlatList
                 horizontal={true}
                 style={styles.list}
+                extraData={this.props.favoritesFilm}
                 data={this.state.discoverTV}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) => (
@@ -99,4 +104,11 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home;
+
+const mapStateToProps = state => {
+    return {
+      favoritesFilm: state.favoritesFilm
+    }
+}
+
+export default connect(mapStateToProps)(Home);

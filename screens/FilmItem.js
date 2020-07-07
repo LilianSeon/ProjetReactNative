@@ -24,18 +24,14 @@ class FilmItem extends Component {
   }
 
   _displayDetailForFilm(idFilm){
-    console.log("Display film " + idFilm)
-    // On a récupéré les informations de la navigation, on peut afficher le détail du film
-    //this.props.navigation.navigate('FilmDetail', {idFilm: idFilm})
-    console.log(this.props.navigation.navigate('FilmDetail', {idFilm: idFilm}))
+    this.props.navigation.navigate('FilmDetail', {idFilm: idFilm})
   }
 
   _displayFavoriteImage() {
     if (this.props.isFilmFavorite) {
       // Si la props isFilmFavorite vaut true, on affiche le 🖤
       return (
-        <Image
-          style={styles.favorite_image}
+        <Image style={{width: 50, height: 50}}
           source={require('../assets/ic_favorite.png')}
         />
       )
@@ -59,6 +55,9 @@ class FilmItem extends Component {
             <NoteBox note={vote_average}/>
             <Text style={styles.title}>{(title) ? title : name}</Text>
             <Text style={styles.subtitle}>{(release_date) ? release_date : first_air_date}</Text>
+            <View style={styles.favorite_image}>
+              {this._displayFavoriteImage()}
+            </View>
         </View>
       </TouchableOpacity>
       </Animated.View>
@@ -105,6 +104,10 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: "600",
       marginTop: 30
+  },
+  favorite_image:{
+    alignItems: 'center',
+    marginTop: 10
   }
 })
 

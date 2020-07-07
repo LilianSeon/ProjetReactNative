@@ -4,6 +4,7 @@ import search from '../assets/search.png';
 import close from '../assets/close.png';
 import FilmItem from './FilmItem'
 import FilmService from '../API/films.service';
+import { connect } from 'react-redux'
 
 class Search extends Component {
 
@@ -75,12 +76,14 @@ class Search extends Component {
             <FlatList
                 horizontal={true}
                 style={styles.list}
+                extraData={this.props.favoritesFilm}
                 data={films}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({item}) => 
                 <FilmItem
                     film={item}
                     style={styles}
+                    isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
                     displayDetailForFilm={false}
                     navigation={navigation}
                 />
@@ -168,4 +171,10 @@ const styles = StyleSheet.create({
 
 });
 
-export default Search;
+const mapStateToProps = state => {
+    return {
+      favoritesFilm: state.favoritesFilm
+    }
+}
+
+export default connect(mapStateToProps)(Search);

@@ -35,13 +35,18 @@ class Inscription extends Component {
     }
 
     async _inscription(){ // Envoie de la requête pour ajouter un utilisateur en base de donnée
-        let response = await UserService.create(this.state.user); // Ajoute un user
-        console.log(response);
+        try{
+             await UserService.create(this.state.user); // Ajoute un user
+        }catch(error){
+            console.log(error);
+        }
+        
+        /*console.log(response);
         if(response.ok){
             this.props.navigation.navigate('Login')
         }else{
             console.log(response);
-        }
+        }*/
     }
 
     render(){
