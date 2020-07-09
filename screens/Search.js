@@ -72,24 +72,22 @@ class Search extends Component {
                     />
                 </View>
             
-            <Text style={styles.title}>Résultats pour les films : </Text>
-            <FlatList
-                horizontal={true}
-                style={styles.list}
-                extraData={this.props.favoritesFilm}
-                data={films}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => 
-                <FilmItem
-                    film={item}
-                    style={styles}
-                    isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
-                    displayDetailForFilm={false}
-                    navigation={navigation}
+                <Text style={styles.title}>Résultats pour les films : </Text>
+                <FlatList
+                    horizontal={true}
+                    style={styles.list}
+                    extraData={this.props.favoritesFilm}
+                    data={films}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({item}) => 
+                    <FilmItem
+                        film={item}
+                        isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
+                        displayDetailForFilm={false}
+                        navigation={navigation}
+                    />
+                    }
                 />
-                }
-            />
-
             </ScrollView>
         )
     }

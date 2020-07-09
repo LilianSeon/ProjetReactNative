@@ -59,6 +59,7 @@ class Home extends Component {
                 renderItem={({item}) => (
                 <FilmItem
                     film={item}
+                    isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
                     displayDetailForFilm={false}
                     navigation={this.props.navigation}
                 />
@@ -68,7 +69,7 @@ class Home extends Component {
             <Text style={styles.title}>Découvrir des Programmes TV</Text>
             <FlatList
                 horizontal={true}
-                style={styles.list}
+                style={styles.list, {marginBottom: 70}}
                 extraData={this.props.favoritesFilm}
                 data={this.state.discoverTV}
                 keyExtractor={(item) => item.id.toString()}
@@ -76,6 +77,7 @@ class Home extends Component {
                 <FilmItem
                     film={item}
                     displayDetailForFilm={false}
+                    isFilmFavorite={(this.props.favoritesFilm.findIndex(film => film.id === item.id) !== -1) ? true : false}
                     navigation={this.props.navigation}
                 />
                 )}
