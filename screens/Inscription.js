@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, FlatList, ScrollView, ImageBackground, Button} from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, FlatList, ScrollView, ImageBackground, Button, Alert} from 'react-native'
 import cinema from '../assets/cinema.jpg';
 import logo from '../assets/logo.png';
 import UserService from '../service/users.service'
@@ -15,6 +15,8 @@ class Inscription extends Component {
           }
       }
     }
+
+    
 
     _handleChangeEmail(e){
         this.setState({
@@ -35,11 +37,18 @@ class Inscription extends Component {
     }
 
     async _inscription(){ // Envoie de la requête pour ajouter un utilisateur en base de donnée
-        try{
-             await UserService.create(this.state.user); // Ajoute un user
-        }catch(error){
-            console.log(error);
+        
+        let response = await UserService.create(this.state.user); // Ajoute un user
+
+        if(response.ok){
+            this.props.navigation.navigate('Login')
+        }else{
+            Alert.alert(
+                "Attention",
+                "Erreur Réseau"
+            )
         }
+        
         
         /*console.log(response);
         if(response.ok){

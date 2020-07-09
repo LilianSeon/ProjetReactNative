@@ -1,20 +1,52 @@
 import React, {Component} from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, FlatList, ScrollView, ImageBackground, Button} from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, FlatList, ScrollView, ImageBackground, Button, Alert} from 'react-native'
 import cinema from '../assets/cinema.jpg';
 import logo from '../assets/logo.png';
-import FilmService from '../API/films.service';
+import UserService from '../service/users.service'
 
 class Login extends Component {
 
     constructor(props){
       super(props)
       this.state = {
-
+        bddUser: [],
+        email: "",
+        password: "",
       }
     }
 
-    _connexion(){
-        this.props.navigation.navigate('Home')
+    _handleChangeEmail(e){
+        this.setState({
+                email: e.nativeEvent.text,
+                password: this.state.password
+        });
+    }
+    
+    _handleChangePassword(e){
+        this.setState({
+                email: this.state.email,
+                password: e.nativeEvent.text
+        });
+    }
+
+    async _connexion(){
+        if(!this.state.email || !this.state.password){
+            Alert.alert(
+                "Attention",
+                "Champs vide"
+            )
+        }else{
+            let response = await UserService.list(); // Retourne la liste de tous les users
+            if(response.ok){
+                let data = await response.json();
+                this.setState({bddUser: data});
+                this.state.bddUser.users.map((user) => {
+                    if(user.email === this.state.email && user.password === this.state.password){
+                            this.props.navigation.navigate('Home');
+                    }
+                });
+            }
+        }
     }
 
     render(){
@@ -23,9 +55,9 @@ class Login extends Component {
             <ImageBackground source={cinema} style={styles.image}>
                 <Image source={logo} style={styles.logo}/>
                 <View style={styles.container}>
-                    <Text style={styles.login}>Login</Text>
-                    <TextInput style={styles.textInput} placeholder='Email...' ></TextInput>
-                    <TextInput style={styles.textInput} placeholder='Mot de passe...' secureTextEntry={true}></TextInput>
+                    <Text style={styles.login}>Connexion</Text>
+                    <TextInput style={styles.textInput} placeholder='Email...' onChange={(e) => this._handleChangeEmail(e)}></TextInput>
+                    <TextInput style={styles.textInput} placeholder='Mot de passe...' secureTextEntry={true} onChange={(e) => this._handleChangePassword(e)}></TextInput>
                     <View style={styles.button_container}>
                         <TouchableOpacity style={{marginRight: 20, marginTop: 7}} onPress={() => this.props.navigation.navigate('Inscription')}>
                             <Text>Inscription</Text>

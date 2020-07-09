@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:3001";
+const baseUrl = "https://39b2e95abed7.ngrok.io";
 
 class UserService{
 
@@ -46,7 +46,6 @@ class UserService{
             body: JSON.stringify(body)
         }
         let call = await fetch(`${baseUrl}/users`, init);
-        console.log(baseUrl);
         return call;
     }
 

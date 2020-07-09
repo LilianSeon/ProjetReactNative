@@ -10,7 +10,6 @@ class UserController{
     static async create(req, res){
         let status = 200;
         let body = {};
-        console.log(req);
 
         try {
 
